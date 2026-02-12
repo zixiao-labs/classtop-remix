@@ -1,0 +1,28 @@
+{
+  "name": "classtop-remix",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "dev:electron": "vite build && npx esbuild electron/main.ts electron/preload.ts --bundle --platform=node --outdir=dist-electron --format=esm --external:electron && electron .",
+    "build:electron": "vite build && npx esbuild electron/main.ts electron/preload.ts --bundle --platform=node --outdir=dist-electron --format=esm --external:electron && electron-builder"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "chen-the-dawnstreak": "^2.0.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "typescript": "^5.6.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "electron": "^35.0.0",
+    "electron-builder": "^26.0.0"
+  }
+}

@@ -1,35 +1,49 @@
 import { app, BrowserWindow } from 'electron';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-function createWindow() {
-  const win = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      contextIsolation: true,
-      nodeIntegration: false,
-    },
-  });
-
-  if (process.env.VITE_DEV_SERVER_URL) {
-    win.loadURL(process.env.VITE_DEV_SERVER_URL);
-  } else {
-    win.loadFile(path.join(__dirname, '../dist/index.html'));
-  }
-}
+import { getDatabase, closeDatabase } from './database/connection';
+import { registerAllHandlers } from './ipc/register-all';
+import { createMainWindow, createTopBarWindow, getMainWindow } from './windows/main-window';
+import { setupTray } from './tray';
+import { startReminderService, stopReminderService } from './notifications';
 
 app.whenReady().then(() => {
-  createWindow();
+  // Initialize database
+  getDatabase();
+
+  // Register all IPC handlers
+  registerAllHandlers();
+
+  // Create windows
+  createMainWindow();
+  createTopBarWindow();
+
+  // Setup system tray
+  setupTray();
+
+  // Start notification reminder service
+  startReminderService();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
+      createMainWindow();
+      createTopBarWindow();
+    } else {
+      const main = getMainWindow();
+      if (main) {
+        main.show();
+        main.focus();
+      }
     }
   });
+});
+
+app.on('before-quit', () => {
+  stopReminderService();
+  closeDatabase();
+  // Remove close handler so windows actually close
+  const main = getMainWindow();
+  if (main) {
+    main.removeAllListeners('close');
+  }
 });
 
 app.on('window-all-closed', () => {

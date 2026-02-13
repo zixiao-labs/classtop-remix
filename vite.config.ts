@@ -1,11 +1,21 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { chen } from 'chen-the-dawnstreak/vite-plugin';
+import { resolve } from 'path';
 
 export default defineConfig({
   base: './',
   plugins: [
     react(),
-    chen(),
   ],
+  optimizeDeps: {
+    include: ['mdui', 'chen-the-dawnstreak'],
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        topbar: resolve(__dirname, 'topbar.html'),
+      },
+    },
+  },
 });

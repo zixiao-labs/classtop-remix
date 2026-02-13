@@ -1,0 +1,134 @@
+.topbar-container {
+  width: 100%;
+  height: 100vh;
+  backdrop-filter: blur(10px);
+  border-radius: 0 0 15px 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.5s ease;
+  -webkit-app-region: drag;
+}
+
+.topbar-content {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 20px;
+  position: relative;
+}
+
+.topbar-left {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.topbar-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.topbar-right {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 2;
+}
+
+/* Progress bar with text overlay */
+.schedule-progress {
+  width: 12rem;
+  height: 2rem;
+  border-radius: 10px;
+  position: relative;
+}
+
+.schedule-progress.break-time {
+  /* visual indicator for break */
+}
+
+/* Bottom layer text - on light background (dark text) */
+.schedule-progress::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  line-height: 2rem;
+  color: var(--mdui-color-on-surface-variant, #49454F);
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-align: center;
+  pointer-events: none;
+  z-index: 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  transform: translateZ(0);
+}
+
+/* Top layer text - on progress fill area (light text) */
+.schedule-progress::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  line-height: 2rem;
+  color: var(--mdui-color-on-primary, #FFFFFF);
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-align: center;
+  pointer-events: none;
+  z-index: 2;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  transform: translateZ(0);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black var(--progress-fill-px, 0px),
+    transparent var(--progress-fill-px, 0px)
+  );
+  mask-image: linear-gradient(
+    to right,
+    black var(--progress-fill-px, 0px),
+    transparent var(--progress-fill-px, 0px)
+  );
+}
+
+@media (max-width: 800px) {
+  .topbar-content {
+    padding: 0 15px;
+  }
+
+  .topbar-left {
+    left: 15px;
+  }
+
+  .topbar-right {
+    right: 15px;
+  }
+
+  .schedule-progress {
+    width: 10rem;
+    height: 1.8rem;
+  }
+
+  .schedule-progress::before,
+  .schedule-progress::after {
+    line-height: 1.8rem;
+    font-size: 0.9rem;
+  }
+}
